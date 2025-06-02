@@ -3,13 +3,15 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAppStore } from "@/lib/store"
-import { HiBookOpen, HiArrowRight, HiAcademicCap, HiClock, HiUserGroup, HiLightningBolt } from "react-icons/hi"
+import { HiBookOpen, HiAcademicCap, HiClock, HiUserGroup, HiLightningBolt, HiLogin } from "react-icons/hi"
+import { MdOutlineFeed } from "react-icons/md"
 
 export default function LandingPage() {
   const router = useRouter()
   const login = useAppStore((state) => state.login)
   const setUser = useAppStore((state) => state.setUser)
   const users = useAppStore((state) => state.users)
+  const students = useAppStore((state) => state.students)
   const setAuthenticated = useAppStore((state) => state.setAuthenticated)
 
   const [loginForm, setLoginForm] = useState({
@@ -50,12 +52,27 @@ export default function LandingPage() {
       user = users.find((u) => u.isAdmin)
     } else if (role === "teacher") {
       user = users.find((u) => u.role === "teacher")
+    } else if (role === "student") {
+      // Use the first student as the demo student user
+      user = {
+        id: "student-demo",
+        name: students[0].name,
+        email: students[0].email,
+        role: "student",
+        isAdmin: false,
+      }
     }
 
     if (user) {
       setUser(user)
       setAuthenticated(true)
-      router.push("/dashboard")
+
+      // Redirect based on role
+      if (role === "student") {
+        router.push("/student-landing")
+      } else {
+        router.push("/dashboard")
+      }
     }
   }
 
@@ -65,16 +82,16 @@ export default function LandingPage() {
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <HiBookOpen className="h-8 w-8 text-blue-500" />
-              <span className="ml-2 text-xl font-bold text-gray-900">FeedbackLoop</span>
+            <div className="flex items-center text-blue-500 font-medium text-lg">
+              <MdOutlineFeed className="h-6 w-6" />
+              <span className="ml-2">FeedbackLoop</span>
             </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setShowLoginForm(true)}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
               >
-                Log in
+                Login
               </button>
             </div>
           </div>
@@ -97,10 +114,9 @@ export default function LandingPage() {
               <div className="mt-8 sm:max-w-lg sm:mx-auto sm:text-center lg:text-left lg:mx-0">
                 <button
                   onClick={() => setShowLoginForm(true)}
-                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
                 >
-                  Get Started
-                  <HiArrowRight className="ml-2 -mr-1 h-5 w-5" />
+                  Login
                 </button>
               </div>
             </div>
@@ -141,21 +157,21 @@ export default function LandingPage() {
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
             <button
               onClick={() => handleQuickAccess("admin")}
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+              className="inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-500 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-400"
             >
               Enter as Admin
             </button>
             <button
               onClick={() => handleQuickAccess("teacher")}
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400"
             >
               Enter as Teacher
             </button>
             <button
-              onClick={() => router.push("/dashboard")}
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              onClick={() => handleQuickAccess("student")}
+              className="inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
             >
-              Go to Dashboard
+              Enter as Student
             </button>
           </div>
         </div>
@@ -293,9 +309,9 @@ export default function LandingPage() {
             <div className="inline-flex rounded-md shadow">
               <button
                 onClick={() => setShowLoginForm(true)}
-                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50"
+                className="inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
               >
-                Get started
+                Login
               </button>
             </div>
           </div>
@@ -306,9 +322,9 @@ export default function LandingPage() {
       <footer className="bg-white">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <HiBookOpen className="h-6 w-6 text-blue-500" />
-              <span className="ml-2 text-lg font-medium text-gray-900">FeedbackLoop</span>
+            <div className="flex items-center text-blue-500 font-medium text-lg">
+              <MdOutlineFeed className="h-6 w-6" />
+              <span className="ml-2">FeedbackLoop</span>
             </div>
             <p className="text-gray-500 text-sm">© 2025 FeedbackLoop. All rights reserved.</p>
           </div>
@@ -396,14 +412,14 @@ export default function LandingPage() {
                 <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                   <button
                     type="submit"
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:col-start-2 sm:text-sm"
+                    className="w-full inline-flex justify-center items-center px-3 py-2 border border-transparent shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 rounded-md"
                   >
-                    Log in
+                    Login <HiLogin className="ml-2 h-5 w-5" />
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowLoginForm(false)}
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+                    className="mt-3 w-full inline-flex justify-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 rounded-md"
                   >
                     Cancel
                   </button>

@@ -3,14 +3,13 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useAppStore } from "@/lib/store"
-import { HiHome, HiMicrophone, HiUserGroup, HiCog, HiLogout } from "react-icons/hi"
+import { HiHome, HiAcademicCap, HiCalendar, HiLogout } from "react-icons/hi"
 import { MdOutlineFeed } from "react-icons/md"
 
-export function Header() {
+export function StudentHeader() {
   const pathname = usePathname()
   const router = useRouter()
   const user = useAppStore((state) => state.user)
-  const selectStudent = useAppStore((state) => state.selectStudent)
   const logout = useAppStore((state) => state.logout)
 
   // Check if the current route is active
@@ -24,8 +23,8 @@ export function Header() {
   }
 
   const handleLogoClick = () => {
-    // Navigate to landing page
-    router.push("/")
+    // Navigate to student landing page
+    router.push("/student-landing")
   }
 
   return (
@@ -36,16 +35,16 @@ export function Header() {
             <button onClick={handleLogoClick} className="flex items-center text-blue-500 font-medium text-lg">
               <MdOutlineFeed className="h-6 w-6" />
               <span className="ml-2">FeedbackLoop</span>
+              <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Student Portal</span>
             </button>
 
             <div className="hidden md:block ml-10">
               <div className="flex items-center space-x-4">
                 <Link
-                  href="/dashboard"
+                  href="/student-landing"
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                    isActive("/dashboard") ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
+                    isActive("/student-landing") ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
                   }`}
-                  onClick={() => selectStudent(null)}
                 >
                   <div className="flex items-center space-x-2">
                     <HiHome className="w-4 h-4" />
@@ -54,49 +53,35 @@ export function Header() {
                 </Link>
 
                 <Link
-                  href="/record"
+                  href="/student-view/portfolio"
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                    isActive("/record") ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
+                    isActive("/student-view/portfolio") ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
-                    <HiMicrophone className="w-4 h-4" />
-                    <span>Record</span>
+                    <HiAcademicCap className="w-4 h-4" />
+                    <span>My Portfolio</span>
                   </div>
                 </Link>
 
                 <Link
-                  href="/students"
+                  href="/student-view/schedule"
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                    isActive("/students") ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
+                    isActive("/student-view/schedule") ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
-                    <HiUserGroup className="w-4 h-4" />
-                    <span>Students</span>
+                    <HiCalendar className="w-4 h-4" />
+                    <span>Assessment Schedule</span>
                   </div>
                 </Link>
-
-                {user && user.isAdmin && (
-                  <Link
-                    href="/admin"
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                      pathname.startsWith("/admin") ? "bg-blue-500 text-white" : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <HiCog className="w-4 h-4" />
-                      <span>Admin</span>
-                    </div>
-                  </Link>
-                )}
               </div>
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-              {user?.role === "admin" ? "Admin" : user?.role === "teacher" ? "Teacher" : "Student"}
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              Student
             </span>
             <div className="text-sm font-normal px-3 py-1">{user?.name}</div>
             <button
@@ -112,49 +97,36 @@ export function Header() {
 
       {/* Mobile navigation */}
       <div className="md:hidden border-t border-gray-100">
-        <div className="grid grid-cols-4 divide-x divide-gray-100">
+        <div className="grid grid-cols-3 divide-x divide-gray-100">
           <Link
-            href="/dashboard"
+            href="/student-landing"
             className={`flex flex-col items-center justify-center py-2 text-xs font-medium ${
-              isActive("/dashboard") ? "text-blue-500" : "text-gray-500"
+              isActive("/student-landing") ? "text-blue-500" : "text-gray-500"
             }`}
-            onClick={() => selectStudent(null)}
           >
             <HiHome className="w-5 h-5 mb-1" />
             <span>Dashboard</span>
           </Link>
 
           <Link
-            href="/record"
+            href="/student-view/portfolio"
             className={`flex flex-col items-center justify-center py-2 text-xs font-medium ${
-              isActive("/record") ? "text-blue-500" : "text-gray-500"
+              isActive("/student-view/portfolio") ? "text-blue-500" : "text-gray-500"
             }`}
           >
-            <HiMicrophone className="w-5 h-5 mb-1" />
-            <span>Record</span>
+            <HiAcademicCap className="w-5 h-5 mb-1" />
+            <span>Portfolio</span>
           </Link>
 
           <Link
-            href="/students"
+            href="/student-view/schedule"
             className={`flex flex-col items-center justify-center py-2 text-xs font-medium ${
-              isActive("/students") ? "text-blue-500" : "text-gray-500"
+              isActive("/student-view/schedule") ? "text-blue-500" : "text-gray-500"
             }`}
           >
-            <HiUserGroup className="w-5 h-5 mb-1" />
-            <span>Students</span>
+            <HiCalendar className="w-5 h-5 mb-1" />
+            <span>Schedule</span>
           </Link>
-
-          {user && user.isAdmin && (
-            <Link
-              href="/admin"
-              className={`flex flex-col items-center justify-center py-2 text-xs font-medium ${
-                pathname.startsWith("/admin") ? "text-blue-500" : "text-gray-500"
-              }`}
-            >
-              <HiCog className="w-5 h-5 mb-1" />
-              <span>Admin</span>
-            </Link>
-          )}
         </div>
       </div>
     </header>

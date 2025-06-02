@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Header } from "@/components/Header"
+import { StudentHeader } from "@/components/StudentHeader"
 import { useAppStore } from "@/lib/store"
 import { StudentProgress } from "@/components/StudentProgress"
 import { HiUser, HiCheck, HiBookOpen } from "react-icons/hi"
@@ -24,7 +24,7 @@ export default function StudentView() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header />
+      <StudentHeader />
 
       <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl">
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">

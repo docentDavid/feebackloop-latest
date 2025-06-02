@@ -62,7 +62,7 @@ export default function Record() {
                 {!selectedStudentId && (
                   <div className="border-t border-gray-100 pt-4">
                     <h3 className="text-sm font-medium text-gray-700 mb-4">Select Student</h3>
-                    <StudentList />
+                    <StudentList showAddButton={false} />
                   </div>
                 )}
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { HiUserGroup, HiUserAdd, HiAcademicCap, HiCalendar, HiUsers, HiCog } from "react-icons/hi"
+import { HiUserGroup, HiUserAdd, HiAcademicCap, HiCalendar, HiUsers, HiCog, HiEye } from "react-icons/hi"
 
 export function AdminSidebar() {
   const pathname = usePathname()
@@ -10,6 +10,9 @@ export function AdminSidebar() {
   const isActive = (path) => {
     return pathname === path
   }
+
+  // Controleer of we in de student view sectie zijn
+  const isInStudentView = pathname.startsWith("/student-view") || pathname.startsWith("/student-landing")
 
   const menuItems = [
     {
@@ -42,6 +45,11 @@ export function AdminSidebar() {
       href: "/admin/users",
       icon: HiUsers,
     },
+    {
+      name: "Student View",
+      href: "/student-landing",
+      icon: HiEye,
+    },
   ]
 
   return (
@@ -58,7 +66,13 @@ export function AdminSidebar() {
               key={item.href}
               href={item.href}
               className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
-                isActive(item.href) ? "bg-blue-50 text-blue-700" : "text-gray-700 hover:bg-gray-100"
+                item.href === "/student-landing"
+                  ? isInStudentView
+                    ? "bg-blue-50 text-blue-700"
+                    : "text-gray-700 hover:bg-gray-100"
+                  : isActive(item.href)
+                    ? "bg-blue-50 text-blue-700"
+                    : "text-gray-700 hover:bg-gray-100"
               }`}
             >
               <item.icon className="w-5 h-5 mr-3" />

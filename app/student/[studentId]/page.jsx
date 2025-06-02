@@ -12,9 +12,6 @@ import { HiArrowLeft, HiUser, HiChat, HiBookOpen } from "react-icons/hi"
 export default function StudentDetail() {
   const router = useRouter()
   const params = useParams()
-  const studentId = params.studentId  {
-  const router = useRouter()
-  const params = useParams()
   const studentId = params.studentId
 
   const students = useAppStore((state) => state.students)

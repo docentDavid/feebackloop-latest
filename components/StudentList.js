@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useAppStore } from "@/lib/store"
 import { HiUserAdd, HiUser, HiChevronLeft, HiChevronRight, HiChevronDown } from "react-icons/hi"
 
-export function StudentList({ showAddButton = true, studentsPerPage: initialStudentsPerPage = 16 }) {
+export function StudentList({ showAddButton = false, studentsPerPage: initialStudentsPerPage = 16 }) {
   const students = useAppStore((state) => state.students)
   const selectedStudentId = useAppStore((state) => state.selectedStudentId)
   const selectStudent = useAppStore((state) => state.selectStudent)
